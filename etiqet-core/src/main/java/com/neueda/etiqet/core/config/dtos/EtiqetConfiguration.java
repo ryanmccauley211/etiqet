@@ -12,15 +12,38 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * XPath: /etiqetConfiguration
  */
-@XmlType(propOrder = {"protocols", "clients", "servers"}, namespace = EtiqetConstants.NAMESPACE)
+@XmlType(propOrder = {"aftermathConfig", "protocols", "clients", "servers"}, namespace = EtiqetConstants.NAMESPACE)
 @XmlRootElement(name = "etiqetConfiguration", namespace = EtiqetConstants.NAMESPACE)
 public class EtiqetConfiguration implements Serializable {
+
+    private AftermathConfig aftermathConfig;
 
     private List<Protocol> protocols = new ArrayList<>();
 
     private List<ClientImpl> clients = new ArrayList<>();
 
     private List<ServerImpl> servers = new ArrayList<>();
+
+    /**
+     * Gets configuration for aftermath test suite viewer
+     *
+     * XPath: /etiqetConfiguration/aftermathConfig
+     *
+     * @return configuration for aftermath
+     */
+    @XmlElement(name = "aftermathConfig", namespace = EtiqetConstants.NAMESPACE)
+    public AftermathConfig getAftermathConfig() {
+        return aftermathConfig;
+    }
+
+    /**
+     * Set aftermath configuration
+     *
+     * @param aftermathConfig
+     */
+    public void setAftermathConfig(AftermathConfig aftermathConfig) {
+        this.aftermathConfig = aftermathConfig;
+    }
 
     /**
      * Gets all defined protocols in the configuration.

@@ -35,10 +35,25 @@
         </xs:keyref>
     </xs:element>
 
+    <xs:complexType name="aftermathConfig">
+        <xs:all>
+            <xs:element name="enabled" type="xs:boolean"/>
+            <xs:element name="host" type="xs:string"/>
+            <xs:element name="project_name" type="xs:string"/>
+            <xs:element name="test_suite_name" type="xs:string"/>
+        </xs:all>
+    </xs:complexType>
+
     <xs:element name="messages" type="Messages"/>
 
     <xs:complexType name="Configuration">
         <xs:sequence>
+            <xs:element minOccurs="0" name="aftermathConfig" type="aftermathConfig">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Configuration for aftermath test suite viewer
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="protocols">
                 <xs:annotation>
                     <xs:documentation xml:lang="en">List of protocols to be included in Etiqet
@@ -498,5 +513,4 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-
 </xs:schema>

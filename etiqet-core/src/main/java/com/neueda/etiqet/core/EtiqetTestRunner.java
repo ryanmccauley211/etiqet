@@ -2,9 +2,11 @@ package com.neueda.etiqet.core;
 
 import static com.neueda.etiqet.core.common.ConfigConstants.DEFAULT_CONFIG_VARIABLE;
 
+import com.neueda.etiqet.AftermathService;
 import com.neueda.etiqet.core.common.Environment;
 import com.neueda.etiqet.core.common.exceptions.EtiqetException;
 import com.neueda.etiqet.core.config.GlobalConfig;
+import com.neueda.etiqet.core.config.dtos.AftermathConfig;
 import com.neueda.etiqet.core.util.StringUtils;
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -15,10 +17,9 @@ import cucumber.runtime.io.ResourceLoader;
 import cucumber.runtime.io.ResourceLoaderClassFinder;
 import cucumber.runtime.junit.FeatureRunner;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
@@ -210,6 +211,27 @@ public class EtiqetTestRunner extends ParentRunner<FeatureRunner> {
      */
     @Override
     public void run(RunNotifier notifier) {
+        try {
+            AftermathConfig aftermathConfig = GlobalConfig.getInstance().getConfig().getAftermathConfig();
+            if (aftermathConfig.isEnabled()) {
+                AftermathService aftermathService = new AftermathService(aftermathConfig.getHost(),
+                    aftermathConfig.getProjectName(), aftermathConfig.getTestSuiteName());
+
+                this.getChildren().forEach(featureRunner -> {
+                    String featureName = featureRunner.getName().split(":[\\s]+", 2)[1];
+                    List<String> scenarioNames = featureRunner.getDescription().getChildren().stream()
+                        .map(Description::getDisplayName)
+                        .map(scenarioName -> scenarioName.split("[Ss]cenario[\\s]?+:[\\s]+", 2)[1])
+                        .collect(Collectors.toList());
+                    aftermathService.addFeature(featureName, scenarioNames);
+                });
+
+                notifier.addListener(new AftermathRunListener(aftermathService));
+            }
+        }
+        catch (EtiqetException e) {
+            LOG.error("Failed to load aftermath config", e);
+        }
         cucumberDelegate.run(notifier);
     }
 }

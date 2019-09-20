@@ -11,14 +11,7 @@ import com.neueda.etiqet.core.config.annotations.Configuration;
 import com.neueda.etiqet.core.config.annotations.EtiqetProtocol;
 import com.neueda.etiqet.core.config.annotations.NamedClient;
 import com.neueda.etiqet.core.config.annotations.NamedServer;
-import com.neueda.etiqet.core.config.dtos.ClientConfig;
-import com.neueda.etiqet.core.config.dtos.ClientImpl;
-import com.neueda.etiqet.core.config.dtos.Dictionary;
-import com.neueda.etiqet.core.config.dtos.EtiqetConfiguration;
-import com.neueda.etiqet.core.config.dtos.Message;
-import com.neueda.etiqet.core.config.dtos.Messages;
-import com.neueda.etiqet.core.config.dtos.Protocol;
-import com.neueda.etiqet.core.config.dtos.ServerImpl;
+import com.neueda.etiqet.core.config.dtos.*;
 import com.neueda.etiqet.core.config.xml.XmlParser;
 import com.neueda.etiqet.core.message.config.ProtocolConfig;
 import com.neueda.etiqet.core.server.Server;
@@ -28,6 +21,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.After;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +42,8 @@ public class GlobalConfig {
     private String configPath;
     private Class<?> configClass;
 
+    private AftermathConfig aftermathConfig;
+
     private Map<String, ProtocolConfig> protocols = new HashMap<>();
 
     private Map<String, Client> clients = new HashMap<>();
@@ -57,6 +54,7 @@ public class GlobalConfig {
         configPath = path;
         try {
             setConfig(new XmlParser().parse(path, EtiqetConfiguration.class));
+            this.aftermathConfig = config.getAftermathConfig();
 
             for (Protocol protocol : config.getProtocols()) {
                 addProtocol(protocol);
