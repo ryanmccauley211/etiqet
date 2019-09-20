@@ -2,7 +2,6 @@ package com.neueda.etiqet;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gherkin.lexer.Da;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +56,7 @@ public class AftermathService {
         if (this.currentFeature == null || this.currentFeature.scenariosLeft() == 0) {
             this.currentFeature = features.poll();
             if (currentFeature != null) {
-                this.currentSection = currentFeature.featureName;
+                this.currentSection = currentFeature.getFeatureName();
             }
         }
         if (this.currentFeature != null) {
@@ -119,11 +118,11 @@ public class AftermathService {
         testCase.evidence = evidence;
     }
 
-    public void setBeginTimeStamp(Date beginTimeStamp) {
+    private void setBeginTimeStamp(Date beginTimeStamp) {
         testCase.beginTimeStamp = beginTimeStamp;
     }
 
-    public void setEndTimeStamp(Date endTimeStamp) {
+    private void setEndTimeStamp(Date endTimeStamp) {
         testCase.endTimeStamp = endTimeStamp;
         setElapsed(Long.toString((testCase.endTimeStamp.getTime() - testCase.beginTimeStamp.getTime())));
     }
@@ -133,7 +132,7 @@ public class AftermathService {
         private String featureName;
         private LinkedList<String> scenarios;
 
-        public CucumberFeatureRep(String featureName, List<String> scenarios) {
+        CucumberFeatureRep(String featureName, List<String> scenarios) {
             this.featureName = featureName;
             this.scenarios = new LinkedList<>(scenarios);
         }
@@ -142,11 +141,11 @@ public class AftermathService {
             return featureName;
         }
 
-        public String pollScenario() {
+        String pollScenario() {
             return scenarios.poll();
         }
 
-        public int scenariosLeft() {
+        int scenariosLeft() {
             return scenarios.size();
         }
     }
@@ -163,7 +162,7 @@ public class AftermathService {
         private Date beginTimeStamp;
         private Date endTimeStamp;
 
-        public TestCase() {
+        TestCase() {
             comments = new ArrayList<>();
             evidence = new LinkedHashMap<>();
         }
