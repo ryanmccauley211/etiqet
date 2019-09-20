@@ -29,6 +29,44 @@ public class AftermathService {
         this.projectName = projectName;
         this.testSuiteName = testSuiteName;
         this.features = new LinkedList<>();
+
+        createBucket();
+        createTestSuite();
+    }
+
+    private void createBucket() {
+        LOG.info("Initializing aftermath project if it doesn't exist [{}]", projectName);
+        try {
+            String path = host + ENTRY_POINT + "/" +
+                URLEncoder.encode(projectName, "UTF-8").replace("+", "%20");
+            URL url = new URL(path);
+            HttpURLConnection conn = createConnection(url, "PUT");
+            int responseCode = performPostRequest(conn, ("{bucketName: " + projectName + "}").getBytes());
+            LOG.info("Initialize project request sent to aftermath. Response: [{}]", responseCode);
+        }
+        catch (IOException e) {
+            LOG.error("Failed to create project in aftermath [{}]", projectName, e);
+        }
+    }
+
+    private void createTestSuite() {
+        LOG.info("Initializing aftermath test suite if it doesn't exist [{}]", testSuiteName);
+        try {
+            String path = host + ENTRY_POINT + "/" +
+                URLEncoder.encode(projectName, "UTF-8").replace("+", "%20") + "/" +
+                URLEncoder.encode(testSuiteName, "UTF-8").replace("+", "%20");
+            URL url = new URL(path);
+            HttpURLConnection conn = createConnection(url, "POST");
+            int responseCode = performPostRequest(conn, (
+                    "{" +
+                        "bucketName: " + projectName + "," +
+                        "evidenceName: "  + testSuiteName +
+                    "}").getBytes());
+            LOG.info("Initialize test suite request sent to aftermath. Response: [{}]", responseCode);
+        }
+        catch (IOException e) {
+            LOG.error("Failed to create test suite in aftermath [{}]", testSuiteName, e);
+        }
     }
 
     private URL buildUrl() throws MalformedURLException, UnsupportedEncodingException {
@@ -68,19 +106,19 @@ public class AftermathService {
         LOG.info("Emitting test case to aftermath [{}]", testCase.getName());
         try {
             URL url = buildUrl();
-            HttpURLConnection conn = createConnection(url);
+            HttpURLConnection conn = createConnection(url, "POST");
             int responseCode = performPostRequest(conn, testCase.serializeAsJson().getBytes());
-            LOG.info("Test case sent to aftermath Response: [{}]", responseCode);
+            LOG.info("Test case sent to aftermath. Response: [{}]", responseCode);
         }
         catch (IOException e) {
             LOG.error("Failed to emit test case to aftermath [{}]", testCase.getName(), e);
         }
     }
 
-    private HttpURLConnection createConnection(URL url) throws IOException {
+    private HttpURLConnection createConnection(URL url, String verb) throws IOException {
         LOG.info("Connecting to aftermath at {}", url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod(verb);
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setDoOutput(true);
         return conn;
