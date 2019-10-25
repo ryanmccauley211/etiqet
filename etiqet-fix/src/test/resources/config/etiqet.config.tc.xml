@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <etiqetConfiguration xmlns="http://www.neueda.com/etiqet">
+    <aftermathConfig>
+        <enabled>true</enabled>
+        <host>http://localhost:8080</host>
+        <project_name>new bucket</project_name>
+        <test_suite_name>new suite</test_suite_name>
+    </aftermathConfig>
     <protocols>
         <protocol name="fix" xmlns="http://www.neueda.com/etiqet">
             <client codecImpl="com.neueda.etiqet.transport.qfj.QfjCodec"

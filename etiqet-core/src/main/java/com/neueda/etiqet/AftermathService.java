@@ -2,6 +2,7 @@ package com.neueda.etiqet;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +15,10 @@ import java.util.*;
 public class AftermathService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AftermathService.class);
+
     private LinkedList<CucumberFeatureRep> features;
     private CucumberFeatureRep currentFeature;
+    private AftermathEvidenceSink aftermathEvidenceSink;
 
     private TestCase testCase;
     private String host;
@@ -30,8 +33,14 @@ public class AftermathService {
         this.testSuiteName = testSuiteName;
         this.features = new LinkedList<>();
 
+        setupLogHandler();
         createBucket();
         createTestSuite();
+    }
+
+    private void setupLogHandler() {
+        aftermathEvidenceSink = new AftermathEvidenceSink();
+        LogManager.getRootLogger().addAppender(aftermathEvidenceSink);
     }
 
     private void createBucket() {
@@ -88,6 +97,7 @@ public class AftermathService {
         setBeginTimeStamp(new Date());
         // assume pass until failure
         setStatusId(true);
+        setEvidence(aftermathEvidenceSink.pollEvidence());
     }
 
     private void setFeatureScenario() {

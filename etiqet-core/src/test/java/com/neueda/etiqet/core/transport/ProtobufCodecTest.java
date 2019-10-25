@@ -8,7 +8,7 @@ import com.neueda.etiqet.core.message.config.ProtocolConfig;
 import com.neueda.etiqet.core.util.ParserUtils;
 import org.junit.Before;
 import org.junit.Test;
-import com.example.tutorial.AddressBookProtos;
+//import com.example.tutorial.AddressBookProtos;
 
 import java.util.*;
 
@@ -134,7 +134,7 @@ public class ProtobufCodecTest {
                              .addCdr(
                                  aCdr("NONE")
                                      .withField("number", "789012345")
-                                     .withField("type", AddressBookProtos.Person.PhoneType.HOME.name())
+//                                     .withField("type", AddressBookProtos.Person.PhoneType.HOME.name())
                                      .build()
                              ).build()
             ).build();
@@ -148,8 +148,8 @@ public class ProtobufCodecTest {
         List<Cdr> phones = result.get("phones").getCdrs();
         assertEquals(1, phones.size());
         assertEquals("789012345", ParserUtils.getTagValueFromCdr("number", phones.get(0)));
-        assertEquals(String.valueOf(AddressBookProtos.Person.PhoneType.HOME.ordinal()),
-                     ParserUtils.getTagValueFromCdr("type", phones.get(0)));
+//        assertEquals(String.valueOf(AddressBookProtos.Person.PhoneType.HOME.ordinal()),
+//                     ParserUtils.getTagValueFromCdr("type", phones.get(0)));
     }
 
     @Test

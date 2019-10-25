@@ -73,6 +73,8 @@
             <field name="TestMessageIndicator" required="N">0</field>
             <field name="Username" required="N">0</field>
             <field name="Password" required="N">0</field>
+            <field name="DefaultApplVerID" required="N">T.4</field>
+            <field name="DefaultCstmApplVerID" required="N">T.4</field>
         </fields>
     </message>
     <message admin="Y" msgtype="5" name="Logout">

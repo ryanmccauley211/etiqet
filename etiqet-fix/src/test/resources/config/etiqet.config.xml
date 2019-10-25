@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <etiqetConfiguration xmlns="http://www.neueda.com/etiqet">
+    <aftermathConfig>
+        <enabled>true</enabled>
+        <host>http://localhost:8080</host>
+        <project_name>new bucket</project_name>
+        <test_suite_name>new suite</test_suite_name>
+    </aftermathConfig>
+
     <protocols>
         <protocol name="fix" xmlns="http://www.neueda.com/etiqet">
             <client impl="com.neueda.etiqet.fix.client.FixClient"
@@ -8,8 +15,8 @@
                     codecImpl="com.neueda.etiqet.transport.qfj.QfjCodec">
                 <delegates>
                     <delegate key="logger" impl="com.neueda.etiqet.core.client.delegate.LoggerClientDelegate"/>
-                    <delegate key="fix" impl="com.neueda.etiqet.fix.client.delegate.FixClientDelegate"/>
-                    <delegate key="fix-logger" impl="com.neueda.etiqet.fix.client.delegate.FixLoggerClientDelegate"/>
+                    <delegate key="fix" impl="com.neueda.etiqet.core.client.delegate.LoggerClientDelegate"/>
+                    <delegate key="fix-logger" impl="com.neueda.etiqet.core.client.delegate.LoggerClientDelegate"/>
                     <delegate key="ordering" impl="com.neueda.etiqet.fix.client.delegate.OrderParamFixClientDelegate"/>
                     <delegate key="ordering" impl="com.neueda.etiqet.fix.client.delegate.ReplaceParamFixClientDelegate"/>
                 </delegates>

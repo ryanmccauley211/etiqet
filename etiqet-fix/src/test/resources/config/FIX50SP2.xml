@@ -10610,5 +10610,6 @@
         <field name='RelationshipRiskEncodedSecurityDesc' number='1619' type='DATA'/>
         <field name='RiskEncodedSecurityDescLen' number='1620' type='LENGTH'/>
         <field name='RiskEncodedSecurityDesc' number='1621' type='DATA'/>
+        <field name='DefaultApplVerID' number='1137' type='STRING'/>
     </fields>
 </fix>

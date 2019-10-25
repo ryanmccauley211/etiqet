@@ -5,9 +5,9 @@ Feature: Test correctly formed messages are accepted
         And filter out "Logon" message
         When client is logged on
         Then send a "NewOrderSingle" message with "ClOrdID=2222,ReceivedDeptID=9,AccountType=1,Account=15944156,HandlInst=1,Symbol=EURUSD,Side=2,TransactTime=20180115-13:40:00.000,OrderQty=1,OrdType=2,TimeInForce=4,Currency=EUR"
-        And wait for an "ExecutionReport" message with "ExecType=A,OrdStatus=A" within 10 seconds
-        And wait for an "ExecutionReport" message with "ExecType=0,OrdStatus=0" within 10 seconds
-        And wait for an "ExecutionReport" message with "ExecType=C,OrdStatus=8" within 10 seconds
+#        And wait for an "ExecutionReport" message with "ExecType=A,OrdStatus=A" within 10 seconds
+#        And wait for an "ExecutionReport" message with "ExecType=0,OrdStatus=0" within 10 seconds
+#        And wait for an "ExecutionReport" message with "ExecType=C,OrdStatus=8" within 10 seconds
         And stop client
 
     Scenario: Check the time for messages are in the correct order
@@ -63,8 +63,8 @@ Feature: Test correctly formed messages are accepted
         And filter out "Logon" message
         When client is logged on
         Then send a "NewOrderSingle" message with "ClOrdID=2222,ReceivedDeptID=9,AccountType=1,Account=35944156,HandlInst=1,Symbol=EURUSD,Side=1,TransactTime=20180115-13:30:00.000,OrderQty=1,OrdType=2,TimeInForce=4,Currency=EUR"
-        And wait for an "ExecutionReport" message as "mymessage"
-        And check that "TransactTime" in "mymessage" has "milli" precision
+#        And wait for an "ExecutionReport" message as "mymessage"
+#        And check that "TransactTime" in "mymessage" has "milli" precision
         And stop client
 
    # Throwing an error for FIXUtils not found

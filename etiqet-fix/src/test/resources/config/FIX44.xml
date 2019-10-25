@@ -287,6 +287,7 @@
             <field name="TestMessageIndicator" required="N"/>
             <field name="Username" required="N"/>
             <field name="Password" required="N"/>
+            <field name='DefaultApplVerID' required="N"/>
         </message>
         <message msgcat="app" msgtype="B" name="News">
             <field name="OrigTime" required="N"/>
@@ -6669,5 +6670,8 @@
         <field name="Nested3PartySubIDType" number="954" type="INT"/>
         <field name="LegContractSettlMonth" number="955" type="MONTHYEAR"/>
         <field name="LegInterestAccrualDate" number="956" type="LOCALMKTDATE"/>
+        <field name='DefaultApplVerID' number='1137' type='STRING'/>
+        <field name='DefaultCstmApplVerID' number='1408' type='STRING'/>
+        <field name='ReceivedDeptID' number='1030' type='STRING'/>
     </fields>
 </fix>

@@ -29,7 +29,7 @@ public class LoggerClientDelegate extends BaseClientDelegate {
 
     @Override
     public Cdr processMessage(Cdr msg) {
-        logger.info("processMessage received for message: " + msg.toString());
+        logger.info("processMessage received for message: {}", msg);
         return super.processMessage(msg);
     }
 }
