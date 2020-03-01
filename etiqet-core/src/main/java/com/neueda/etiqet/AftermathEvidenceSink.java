@@ -8,8 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AftermathEvidenceSink extends AppenderSkeleton {
 
@@ -52,10 +50,18 @@ public class AftermathEvidenceSink extends AppenderSkeleton {
     private void processLogEvent(LoggingEvent loggingEvent) {
         String message = String.format("%s\n", loggingEvent.getMessage().toString());
         if (message.startsWith(CLIENT_MSG_DELIMITER_IN)) {
-            handleClientIn();
+            Map<String, String> renderedFixMessage =
+                handleFixString(loggingEvent.getRenderedMessage().split(CLIENT_MSG_DELIMITER_IN)[1].trim());
+            if (renderedFixMessage.size() > 0) {
+                clientOut.add(renderedFixMessage);
+            }
         }
         else if (message.startsWith(CLIENT_MSG_DELIMITER_OUT)) {
-            handleClientOut();
+            Map<String, String> renderedFixMessage =
+                handleFixString(loggingEvent.getRenderedMessage().split(CLIENT_MSG_DELIMITER_OUT)[1].trim());
+            if (renderedFixMessage.size() > 0) {
+                clientOut.add(renderedFixMessage);
+            }
         }
         else if (message.startsWith("EXCHANGE_MSG_DELIMITER")) {
             handleExchange(loggingEvent);
@@ -66,27 +72,17 @@ public class AftermathEvidenceSink extends AppenderSkeleton {
         memoryBuffer.add(loggingEvent.getMessage());
     }
 
-    private void handleClientIn() {
-        Object previousLog = memoryBuffer.poll();
-        if (previousLog != null) {
-            Pattern insideBracketsPattern = Pattern.compile("\\[(.+?)]", Pattern.DOTALL);
-            List<String> keyValuePairs = new ArrayList<>();
-            Matcher bracketMatcher = insideBracketsPattern.matcher(previousLog.toString());
-            while (bracketMatcher.find()) {
-                keyValuePairs.add(bracketMatcher.group(1));
+    private Map<String, String> handleFixString(String fixString) {
+        String[] fixMessageParts = fixString.split("\u0001");
+        Map<String, String> fixMessageMapped = new LinkedHashMap<>();
+        for (String fixPart : fixMessageParts) {
+            String[] fixTagValPairs = fixPart.split("=");
+            if (fixTagValPairs.length < 2) {
+                continue;
             }
-
-            Pattern keyValuePattern = Pattern.compile("key=(.+?), value=(.+?)", Pattern.DOTALL);
-            Map<String, String> keyValueMap = new HashMap<>();
-            Matcher keyValueMatcher = keyValuePattern.matcher(previousLog.toString());
-            while (keyValueMatcher.find()) {
-                keyValueMap.put(keyValueMatcher.group(1), keyValueMatcher.group(2));
-            }
+            fixMessageMapped.put(fixTagValPairs[0], fixTagValPairs[1]);
         }
-    }
-
-    private void handleClientOut() {
-        // todo
+        return fixMessageMapped;
     }
 
     private void handleExchange(LoggingEvent loggingEvent) {
